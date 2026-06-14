@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVault | إتمام الطلب الآمن</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        .step-active { color: #3b82f6; font-weight: bold; }
+        .step-bubble-active { background-color: #3b82f6; color: white; box-shadow: 0 0 15px rgba(59,130,246,0.5); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <nav class="backdrop-blur-md bg-slate-900/80 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="text-2xl font-bold tracking-wider bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                    <i class="fa-solid fa-cubes-gradient mr-1"></i> PixelVault
+                </a>
+                <span class="text-xs text-slate-500"><i class="fa-solid fa-lock text-emerald-500"></i> تشفير آمن 256-بت</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
+        
+        <div class="flex items-center justify-center gap-4 mb-12 max-w-md mx-auto">
+            <div class="flex flex-col items-center gap-2">
+                <div id="bubble-1" class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-blue-600 text-white step-bubble-active">1</div>
+                <span id="text-1" class="text-xs text-blue-500 font-bold">الحساب</span>
+            </div>
+            <div class="h-[2px] bg-slate-700 flex-grow -mt-6 transition-colors duration-300" id="line-1"></div>
+            <div class="flex flex-col items-center gap-2">
+                <div id="bubble-2" class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-slate-800 text-slate-400">2</div>
+                <span id="text-2" class="text-xs text-slate-400">الدفع</span>
+            </div>
+            <div class="h-[2px] bg-slate-700 flex-grow -mt-6 transition-colors duration-300" id="line-2"></div>
+            <div class="flex flex-col items-center gap-2">
+                <div id="bubble-3" class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-slate-800 text-slate-400">3</div>
+                <span id="text-3" class="text-xs text-slate-400">الـتأكيد</span>
+            </div>
+        </div>
+
+        <div class="bg-slate-800/30 border border-slate-800 rounded-3xl p-6 md:p-8">
+            <form id="wizard-form" onsubmit="handleFormSubmit(event)">
+                
+                <div id="step-section-1" class="space-y-6">
+                    <h2 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-user-astronaut text-blue-400 ml-2"></i>معلومات تسليم السلع الرقمية</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2">الاسم الكامل *</label>
+                            <input type="text" required id="inp-name" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2">البريد الإلكتروني (لاستلام الأكواد) *</label>
+                            <input type="email" required id="inp-email" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white text-left focus:outline-none focus:border-blue-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2">رقم الهاتف (اختياري)</label>
+                        <input type="tel" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white text-left focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+
+                <div id="step-section-2" class="space-y-6 hidden">
+                    <h2 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-credit-card text-purple-400 ml-2"></i>بيانات بطاقة الدفع (محاكاة وهمية)</h2>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2">رقم البطاقة الائتمانية *</label>
+                        <div class="relative">
+                            <input type="text" placeholder="4111 2222 3333 4444" required id="inp-card" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-4 pr-11 py-3 text-sm text-white tracking-widest text-left focus:outline-none focus:border-blue-500 transition-colors">
+                            <i class="fa-solid fa-credit-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-base"></i>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2">تاريخ الانتهاء *</label>
+                            <input type="text" placeholder="MM/YY" required id="inp-date" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white text-left focus:outline-none focus:border-blue-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-2">رمز التحقق (CVV) *</label>
+                            <input type="password" placeholder="***" maxlength="3" required id="inp-cvv" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white text-left focus:outline-none focus:border-blue-500 transition-colors">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step-section-3" class="text-center py-8 space-y-4 hidden">
+                    <div class="w-20 h-20 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-4xl flex items-center justify-center rounded-full mx-auto animate-pulse">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-white">تمت عملية الشراء بنجاح!</h2>
+                    <p class="text-slate-400 text-sm max-w-sm mx-auto leading-relaxed">
+                        شكراً لك <span id="summary-name" class="text-blue-400 font-bold"></span>. تم إرسال الأكواد ومفاتيح التفعيل الرقمية فوراً إلى البريد: <br>
+                        <span id="summary-email" class="text-purple-400 font-bold"></span>
+                    </p>
+                    <div class="pt-6">
+                        <button type="button" onclick="clearCartAndExit()" class="px-6 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white rounded-xl font-bold text-sm transition-all">
+                            العودة للرئيسية
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-10 pt-6 border-t border-slate-800" id="wizard-actions">
+                    <button type="button" id="prev-btn" onclick="goBack()" class="px-5 py-2.5 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-sm font-semibold transition-colors opacity-0 pointer-events-none">
+                        السابق
+                    </button>
+                    <button type="button" id="next-btn" onclick="goNext()" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl text-sm transition-all shadow-md">
+                        التالي <i class="fa-solid fa-angle-left mr-1"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-slate-950 border-t border-slate-800 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 PixelVault. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+
+        // في حال تم الدخول للصفحة بدون سلة، ارجع للرئيسية
+        const cart = JSON.parse(localStorage.getItem('pixel_vault_cart')) || [];
+        if (cart.length === 0 && window.location.hash !== "#success") {
+             // تنبيه بسيط
+        }
+
+        function updateStepUI() {
+            // التبديل بين الأقسام الفرعية بالـ Form
+            document.getElementById('step-section-1').classList.add('hidden');
+            document.getElementById('step-section-2').classList.add('hidden');
+            document.getElementById('step-section-3').classList.add('hidden');
+            document.getElementById(`step-section-${currentStep}`).classList.remove('hidden');
+
+            // تعديل شكل الخطوات العلوية (Progress Bar Indicators)
+            if(currentStep >= 2) {
+                document.getElementById('bubble-2').classList.add('step-bubble-active', 'bg-blue-600');
+                document.getElementById('text-2').classList.add('text-blue-500', 'font-bold');
+                document.getElementById('line-1').classList.replace('bg-slate-700', 'bg-blue-600');
+            } else {
+                document.getElementById('bubble-2').classList.remove('step-bubble-active', 'bg-blue-600');
+                document.getElementById('text-2').classList.remove('text-blue-500', 'font-bold');
+                document.getElementById('line-1').classList.replace('bg-blue-600', 'bg-slate-700');
+            }
+
+            if(currentStep === 3) {
+                document.getElementById('bubble-3').classList.add('step-bubble-active', 'bg-blue-600');
+                document.getElementById('text-3').classList.add('text-blue-500', 'font-bold');
+                document.getElementById('line-2').classList.replace('bg-slate-700', 'bg-blue-600');
+                
+                // إخفاء أزرار الـ التحكم بالكامل
+                document.getElementById('wizard-actions').classList.add('hidden');
+            }
+
+            // تعديل حالة زر "السابق"
+            const prevBtn = document.getElementById('prev-btn');
+            if(currentStep === 2) {
+                prevBtn.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                prevBtn.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            // تعديل نص زر "التالي"
+            const nextBtn = document.getElementById('next-btn');
+            if(currentStep === 2) {
+                nextBtn.innerHTML = `تأكيد الدفع وشراء <i class="fa-solid fa-basket-shopping mr-1"></i>`;
+            } else {
+                nextBtn.innerHTML = `التالي <i class="fa-solid fa-angle-left mr-1"></i>`;
+            }
+        }
+
+        function goNext() {
+            // التحقق من المدخلات لكل خطوة على حدة يدوياً قبل الانتقال
+            if (currentStep === 1) {
+                const name = document.getElementById('inp-name').value.trim();
+                const email = document.getElementById('inp-email').value.trim();
+                if(!name || !email) {
+                    alert('يرجى ملء الحقول المطلوبة أولاً.');
+                    return;
+                }
+            } else if (currentStep === 2) {
+                const card = document.getElementById('inp-card').value.trim();
+                const date = document.getElementById('inp-date').value.trim();
+                const cvv = document.getElementById('inp-cvv').value.trim();
+                if(!card || !date || !cvv) {
+                    alert('يرجى تعبئة بيانات الدفع للمحاكاة.');
+                    return;
+                }
+                
+                // محاكاة إتمام الطلب وعرض صفحة النجاح
+                document.getElementById('summary-name').textContent = document.getElementById('inp-name').value;
+                document.getElementById('summary-email').textContent = document.getElementById('inp-email').value;
+            }
+
+            currentStep++;
+            updateStepUI();
+        }
+
+        function goBack() {
+            if(currentStep > 1) {
+                currentStep--;
+                updateStepUI();
+            }
+        }
+
+        function clearCartAndExit() {
+            // مسح السلة بعد نجاح الشراء تماماً
+            localStorage.removeItem('pixel_vault_cart');
+            window.location.href = "index.html";
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

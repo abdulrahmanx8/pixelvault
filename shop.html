@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVault | المتجر الرقمي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        .glow-effect:hover { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <nav class="backdrop-blur-md bg-slate-900/80 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold tracking-wider bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                        <i class="fa-solid fa-cubes-gradient mr-1"></i> PixelVault
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-reverse space-x-8 text-sm font-medium">
+                    <a href="index.html" class="text-slate-300 hover:text-blue-400 transition-colors">الرئيسية</a>
+                    <a href="shop.html" class="text-blue-500 transition-colors">المتجر</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="cart.html" class="relative p-2 text-slate-300 hover:text-white transition-colors">
+                        <i class="fa-solid fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -left-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center scale-0 transition-transform duration-300">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10 pb-6 border-b border-slate-800">
+            <div>
+                <h1 class="text-3xl font-extrabold mb-1">المتجر الرقمي</h1>
+                <p class="text-slate-400 text-sm">استكشف مكتبتنا الضخمة للألعاب والمفاتيح البرمجية.</p>
+            </div>
+            
+            <div class="flex items-center gap-4 self-end md:self-auto">
+                <label for="sort-select" class="text-sm text-slate-400 whitespace-nowrap"><i class="fa-solid fa-filter ml-1"></i> ترتيب حسب:</label>
+                <select id="sort-select" onchange="sortProducts()" class="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition-colors cursor-pointer">
+                    <option value="default">الافتراضي</option>
+                    <option value="price-asc">السعر: من الأقل للأعلى</option>
+                    <option value="price-desc">السعر: من الأعلى للأقل</option>
+                    <option value="rating">التقييم: الأعلى أولاً</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="shop-grid">
+            </div>
+    </main>
+
+    <footer class="bg-slate-950 border-t border-slate-800 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 PixelVault. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        const products = [
+            { id: 1, title: "Cyberpunk 2077 - Steam Key", price: 29.99, rating: 4.8, category: "games", image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop&q=60" },
+            { id: 2, title: "PlayStation Store Card $50", price: 50.00, rating: 4.9, category: "cards", image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&auto=format&fit=crop&q=60" },
+            { id: 3, title: "Valorant 5000 VP Points", price: 44.99, rating: 4.7, category: "coins", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&auto=format&fit=crop&q=60" },
+            { id: 4, title: "Xbox Game Pass Ultimate 3 Months", price: 38.50, rating: 4.6, category: "subs", image: "https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop&q=60" },
+            { id: 5, title: "Elden Ring - PC Global", price: 49.99, rating: 5.0, category: "games", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&auto=format&fit=crop&q=60" },
+            { id: 6, title: "Netflix Premium 1 Month", price: 12.00, rating: 4.5, category: "subs", image: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500&auto=format&fit=crop&q=60" }
+        ];
+
+        let currentProducts = [...products];
+        let cart = JSON.parse(localStorage.getItem('pixel_vault_cart')) || [];
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-count');
+            const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            if(totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('scale-0');
+                badge.classList.add('scale-100');
+            } else {
+                badge.classList.remove('scale-100');
+                badge.classList.add('scale-0');
+            }
+        }
+
+        function renderShop() {
+            const grid = document.getElementById('shop-grid');
+            grid.innerHTML = currentProducts.map(product => `
+                <div class="bg-slate-800/30 rounded-2xl overflow-hidden border border-slate-700/40 hover:border-blue-500/40 transition-all duration-300 flex flex-col justify-between glow-effect transform hover:-translate-y-1">
+                    <div class="relative h-44 overflow-hidden group">
+                        <img src="${product.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="${product.title}">
+                        <div class="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-xs font-bold text-amber-400 flex items-center gap-1">
+                            <i class="fa-solid fa-star text-[10px]"></i> ${product.rating}
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-base mb-1.5 text-white line-clamp-1">${product.title}</h3>
+                            <p class="text-slate-400 text-xs mb-3">تسليم أوتوماتيكي فوري عالي السرعة.</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="text-xl font-extrabold text-blue-400">$${product.price.toFixed(2)}</span>
+                            <button onclick="addToCart(${product.id}, this)" class="px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg font-bold text-xs text-white flex items-center transition-all">
+                                <i class="fa-solid fa-cart-plus ml-1.5"></i> أضف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id, buttonEl) {
+            const product = products.find(p => p.id === id);
+            const existingItem = cart.find(item => item.id === id);
+
+            if(existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            localStorage.setItem('pixel_vault_cart', JSON.stringify(cart));
+            updateCartBadge();
+
+            buttonEl.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            buttonEl.classList.remove('from-blue-600', 'to-purple-600');
+            buttonEl.classList.add('from-emerald-600', 'to-emerald-500');
+            
+            setTimeout(() => {
+                buttonEl.innerHTML = `<i class="fa-solid fa-cart-plus ml-1.5"></i> أضف`;
+                buttonEl.classList.remove('from-emerald-600', 'to-emerald-500');
+                buttonEl.classList.add('from-blue-600', 'to-purple-600');
+            }, 1000);
+        }
+
+        function sortProducts() {
+            const value = document.getElementById('sort-select').value;
+            if (value === 'price-asc') {
+                currentProducts.sort((a, b) => a.price - b.price);
+            } else if (value === 'price-desc') {
+                currentProducts.sort((a, b) => b.price - a.price);
+            } else if (value === 'rating') {
+                currentProducts.sort((a, b) => b.rating - a.rating);
+            } else {
+                currentProducts = [...products];
+            }
+            renderShop();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            renderShop();
+        });
+    </script>
+</body>
+</html>
