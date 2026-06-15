@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelVault | المتجر الرقمي</title>
+    <title>PixelVault | Digital Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
         .glow-effect:hover { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
+    <!-- Nav -->
     <nav class="backdrop-blur-md bg-slate-900/80 border-b border-slate-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -22,45 +23,50 @@
                         <i class="fa-solid fa-cubes-gradient mr-1"></i> PixelVault
                     </a>
                 </div>
-                <div class="hidden md:flex items-center space-x-reverse space-x-8 text-sm font-medium">
-                    <a href="index.html" class="text-slate-300 hover:text-blue-400 transition-colors">الرئيسية</a>
-                    <a href="shop.html" class="text-blue-500 transition-colors">المتجر</a>
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="index.html" class="text-slate-300 hover:text-blue-400 transition-colors">Home</a>
+                    <a href="shop.html" class="text-blue-500 transition-colors">Shop</a>
                 </div>
                 <div class="flex items-center gap-4">
                     <a href="cart.html" class="relative p-2 text-slate-300 hover:text-white transition-colors">
                         <i class="fa-solid fa-shopping-cart text-xl"></i>
-                        <span id="cart-count" class="absolute -top-1 -left-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center scale-0 transition-transform duration-300">0</span>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center scale-0 transition-transform duration-300">0</span>
                     </a>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Main Shop Section -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10 pb-6 border-b border-slate-800">
             <div>
-                <h1 class="text-3xl font-extrabold mb-1">المتجر الرقمي</h1>
-                <p class="text-slate-400 text-sm">استكشف مكتبتنا الضخمة للألعاب والمفاتيح البرمجية.</p>
+                <h1 class="text-3xl font-extrabold mb-1">Digital Shop</h1>
+                <p class="text-slate-400 text-sm">Explore our huge library of games and digital keys.</p>
             </div>
             
+            <!-- Controls (Sorting) -->
             <div class="flex items-center gap-4 self-end md:self-auto">
-                <label for="sort-select" class="text-sm text-slate-400 whitespace-nowrap"><i class="fa-solid fa-filter ml-1"></i> ترتيب حسب:</label>
+                <label for="sort-select" class="text-sm text-slate-400 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i> Sort by:</label>
                 <select id="sort-select" onchange="sortProducts()" class="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition-colors cursor-pointer">
-                    <option value="default">الافتراضي</option>
-                    <option value="price-asc">السعر: من الأقل للأعلى</option>
-                    <option value="price-desc">السعر: من الأعلى للأقل</option>
-                    <option value="rating">التقييم: الأعلى أولاً</option>
+                    <option value="default">Default</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="rating">Rating: Top Rated</option>
                 </select>
             </div>
         </div>
 
+        <!-- Shop Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="shop-grid">
-            </div>
+            <!-- Rendered by JS -->
+        </div>
     </main>
 
+    <!-- Footer -->
     <footer class="bg-slate-950 border-t border-slate-800 py-6">
         <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
-            <p>&copy; 2026 PixelVault. جميع الحقوق محفوظة.</p>
+            <p>&copy; 2026 PixelVault. All rights reserved.</p>
         </div>
     </footer>
 
@@ -96,19 +102,19 @@
                 <div class="bg-slate-800/30 rounded-2xl overflow-hidden border border-slate-700/40 hover:border-blue-500/40 transition-all duration-300 flex flex-col justify-between glow-effect transform hover:-translate-y-1">
                     <div class="relative h-44 overflow-hidden group">
                         <img src="${product.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="${product.title}">
-                        <div class="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-xs font-bold text-amber-400 flex items-center gap-1">
+                        <div class="absolute top-2 right-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-xs font-bold text-amber-400 flex items-center gap-1">
                             <i class="fa-solid fa-star text-[10px]"></i> ${product.rating}
                         </div>
                     </div>
                     <div class="p-5 flex-grow flex flex-col justify-between">
                         <div>
                             <h3 class="font-bold text-base mb-1.5 text-white line-clamp-1">${product.title}</h3>
-                            <p class="text-slate-400 text-xs mb-3">تسليم أوتوماتيكي فوري عالي السرعة.</p>
+                            <p class="text-slate-400 text-xs mb-3">High-speed automated instant execution.</p>
                         </div>
                         <div class="flex items-center justify-between mt-3">
                             <span class="text-xl font-extrabold text-blue-400">$${product.price.toFixed(2)}</span>
                             <button onclick="addToCart(${product.id}, this)" class="px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg font-bold text-xs text-white flex items-center transition-all">
-                                <i class="fa-solid fa-cart-plus ml-1.5"></i> أضف
+                                <i class="fa-solid fa-cart-plus mr-1.5"></i> Add
                             </button>
                         </div>
                     </div>
@@ -134,7 +140,7 @@
             buttonEl.classList.add('from-emerald-600', 'to-emerald-500');
             
             setTimeout(() => {
-                buttonEl.innerHTML = `<i class="fa-solid fa-cart-plus ml-1.5"></i> أضف`;
+                buttonEl.innerHTML = `<i class="fa-solid fa-cart-plus mr-1.5"></i> Add`;
                 buttonEl.classList.remove('from-emerald-600', 'to-emerald-500');
                 buttonEl.classList.add('from-blue-600', 'to-purple-600');
             }, 1000);
